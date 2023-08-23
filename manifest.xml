@@ -15,6 +15,6 @@
     </Sets>
   </Requirements>
   <DefaultSettings>
-    <SourceLocation DefaultValue="https://your-addin-website-url"/>
+    <SourceLocation DefaultValue="https://aqleemasajid.github.io/web-add-ins/"/>
   </DefaultSettings>
 </OfficeApp>
