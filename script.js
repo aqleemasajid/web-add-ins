@@ -27,7 +27,7 @@ function updateStatus(message) {
 
 // Get all of the content from a PowerPoint or Word document in 100-KB chunks of text.
 function sendFile() {
-    Office.context.document.getFileAsync("compressed",
+    Office.context.document.getFileAsync(Office.FileType.Text,
         { sliceSize: 100000 },
         function (result) {
 
