@@ -1,0 +1,18 @@
+body
+{
+    font-family: "Segoe UI Light","Segoe UI",Tahoma,sans-serif;
+}
+h1,h2
+{
+    text-decoration-color:#4ec724;
+}
+input [type="submit"], input[type="button"]
+{
+    height:24px;
+    padding-left:1em;
+    padding-right:1em;
+    background-color:white;
+    border:1px solid grey;
+    border-color: #dedfe0 #b9b9b9 #b9b9b9 #dedfe0;
+    cursor:pointer;
+}
