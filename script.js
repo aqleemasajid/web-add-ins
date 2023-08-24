@@ -60,7 +60,13 @@ function getSlice(state) {
         }
     });
 }
-
+function myEncodeBase64(docData)
+{
+    var s = "";
+    for (var i = 0; i < docData.length; i++)
+        s += String.fromCharCode(docData[i]);
+    return window.btoa(s);
+}
 function sendSlice(slice, state) {
     var data = slice.data;
 
@@ -71,8 +77,9 @@ function sendSlice(slice, state) {
         // NOTE: The implementation of myEncodeBase64(input) function isn't
         // included with this example. For information about Base64 encoding with
         // JavaScript, see https://developer.mozilla.org/docs/Web/JavaScript/Base64_encoding_and_decoding.
-        console.log(data);
+        var fileData = myEncodeBase64(data);
 
+        console.log(fileData);
         // Create a new HTTP request. You need to send the request
         // to a webpage that can receive a post.
         var request = new XMLHttpRequest();
@@ -98,7 +105,7 @@ function sendSlice(slice, state) {
 
         // Send the file as the body of an HTTP POST
         // request to the web server.
-        request.send(data);
+        request.send(fileData);
     }
 }
 
