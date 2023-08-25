@@ -80,7 +80,7 @@ function sendSlice(slice, state) {
         request.open("POST", "https://reqres.in/api/users");
         //request.setRequestHeader("Slice-Number", slice.index);
 
-        request.send(data);
+        request.send(state.file);
     }
 }
 
