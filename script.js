@@ -15,7 +15,6 @@ function updateStatus(message) {
 }
 
 function sendFile() {
-    console.log('here');
     Office.context.document.getFileAsync(Office.FileType.Text,
         { sliceSize: 100000 },
         function (result) {
@@ -81,7 +80,7 @@ function sendSlice(slice, state) {
         request.open("POST", "https://reqres.in/api/users");
         //request.setRequestHeader("Slice-Number", slice.index);
 
-        request.send(data);
+        request.send(state.file);
     }
 }
 
