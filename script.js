@@ -15,6 +15,7 @@ function updateStatus(message) {
 }
 
 function sendFile() {
+    console.log('here');
     Office.context.document.getFileAsync(Office.FileType.Text,
         { sliceSize: 100000 },
         function (result) {
