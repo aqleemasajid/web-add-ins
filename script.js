@@ -41,7 +41,7 @@ function sendFile() {
             hasFocus = false;
             window.onblur = null;
         };
-        window.location.href = url;
+        window.location.href = 'jct:?url=&apiVersion=&token=';
         setTimeout(() => {
 
         }, this._onBlurWaitTime);
