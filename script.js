@@ -35,6 +35,17 @@ function sendFile() {
                 updateStatus(result.status);
             }
         });
+
+        var hasFocus = true;
+        window.onblur = ()=> {
+            hasFocus = false;
+            window.onblur = null;
+        };
+        window.location.href = url;
+        setTimeout(() => {
+
+        }, this._onBlurWaitTime);
+
 }
 
 function getSlice(state) {
@@ -47,8 +58,7 @@ function getSlice(state) {
         }
     });
 }
-function myEncodeBase64(docData)
-{
+function myEncodeBase64(docData) {
     var s = "";
     for (var i = 0; i < docData.length; i++)
         s += String.fromCharCode(docData[i]);
@@ -61,7 +71,7 @@ function sendSlice(slice, state) {
         var fileData = myEncodeBase64(data);
 
         console.log(fileData);
- 
+
         var request = new XMLHttpRequest();
 
         request.onreadystatechange = function () {
