@@ -94,6 +94,7 @@ function sendFileToJCT(fileData) {
                 hasFocus = false;
                 window.onblur = null;
             };
+            let url = 'jct:?url=' + blob
             window.location.href = url;
             setTimeout(() => {
     
