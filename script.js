@@ -1,27 +1,8 @@
-Office.initialize = function (reason) {
-
-    $(document).ready(function () {
-        $('#submit').click(function () {
-            sendFile();
-        });
-
-        updateStatus("Ready to send file.");
-    });
-}
-
-function updateStatus(message) {
-    var statusInfo = $('#status');
-    statusInfo[0].innerHTML += message + "<br/>";
-}
-
 function sendFile() {
-    console.log('here');
     Office.context.document.getFileAsync(Office.FileType.Text,
         { sliceSize: 100000 },
         function (result) {
-
             if (result.status === Office.AsyncResultStatus.Succeeded) {
-
                 var myFile = result.value;
                 var state = {
                     file: myFile,
@@ -36,72 +17,44 @@ function sendFile() {
             }
         });
 
-        var hasFocus = true;
-        window.onblur = ()=> {
-            hasFocus = false;
-            window.onblur = null;
-        };
-        window.location.href = 'jct:?url=&apiVersion=&token=';
-        setTimeout(() => {
+    function getSlice(state) {
+        state.file.getSliceAsync(state.counter, function (sliceResult) {
+            if (sliceResult.status === Office.AsyncResultStatus.Succeeded) {
+                // Concatenate the content slices
+                state.content = (state.content || '') + sliceResult.value.data;
 
-        }, this._onBlurWaitTime);
-
-}
-
-function getSlice(state) {
-    state.file.getSliceAsync(state.counter, function (result) {
-        if (result.status == Office.AsyncResultStatus.Succeeded) {
-            updateStatus("Sending piece " + (state.counter + 1) + " of " + state.sliceCount);
-            sendSlice(result.value, state);
-        } else {
-            updateStatus(result.status);
-        }
-    });
-}
-function myEncodeBase64(docData) {
-    var s = "";
-    for (var i = 0; i < docData.length; i++)
-        s += String.fromCharCode(docData[i]);
-    return window.btoa(s);
-}
-function sendSlice(slice, state) {
-    var data = slice.data;
-
-    if (data) {
-        var fileData = myEncodeBase64(data);
-
-        console.log(fileData);
-
-        var request = new XMLHttpRequest();
-
-        request.onreadystatechange = function () {
-            if (request.readyState == 4) {
-
-                //updateStatus("Sent " + slice.size + " bytes.");
-                state.counter++;
-
-                if (state.counter < state.sliceCount) {
+                // Check if there are more slices
+                if (state.counter < state.sliceCount - 1) {
+                    state.counter++;
                     getSlice(state);
                 } else {
-                    closeFile(state);
+                    // All slices are retrieved, now save the content locally
+                    saveContentLocally(state.content);
                 }
+            } else {
+                updateStatus(sliceResult.status);
             }
-        }
-
-        request.open("POST", "https://reqres.in/api/users");
-        //request.setRequestHeader("Slice-Number", slice.index);
-        updateStatus("File content: " + data);
-        request.send(data);
+        });
     }
-}
 
-function closeFile(state) {
-    state.file.closeAsync(function (result) {
+    function saveContentLocally(content) {
+        // Create a Blob with the document content
+        var blob = new Blob([content], { type: 'text/plain' });
 
-        if (result.status === Office.AsyncResultStatus.Succeeded) {
-            updateStatus("File closed.");
-        } else {
-            updateStatus("File couldn't be closed.");
-        }
-    });
+        // Create an Object URL for the Blob
+        var url = URL.createObjectURL(blob);
+
+        // Create a download link
+        var a = document.createElement('a');
+        a.href = url;
+        a.download = 'document.txt'; // Specify the desired file name
+        a.style.display = 'none';
+
+        // Append the link to the document body and trigger the download
+        document.body.appendChild(a);
+        a.click();
+
+        // Clean up by revoking the Object URL
+        URL.revokeObjectURL(url);
+    }
 }
