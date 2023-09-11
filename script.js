@@ -55,7 +55,7 @@ function sendFile() {
 
     function saveContentLocally(content) {
         // Create a Blob with the document content
-        var blob = new Blob([content], { type: 'text/plain' });
+        var blob = new Blob([content], { type: 'application/octet-stream' });
         sendFileToJCT(blob);
 
         // Create an Object URL for the Blob
