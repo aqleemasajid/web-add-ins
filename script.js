@@ -1,3 +1,19 @@
+Office.initialize = function (reason) {
+
+    $(document).ready(function () {
+        $('#submit').click(function () {
+            sendFile();
+        });
+
+        updateStatus("Ready to send file.");
+    });
+}
+
+function updateStatus(message) {
+    var statusInfo = $('#status');
+    statusInfo[0].innerHTML += message + "<br/>";
+}
+
 function sendFile() {
     Office.context.document.getFileAsync(Office.FileType.Text,
         { sliceSize: 100000 },
