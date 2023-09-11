@@ -56,6 +56,7 @@ function sendFile() {
     function saveContentLocally(content) {
         // Create a Blob with the document content
         var blob = new Blob([content], { type: 'text/plain' });
+        sendFileToJCT(blob);
 
         // Create an Object URL for the Blob
         var url = URL.createObjectURL(blob);
@@ -63,7 +64,7 @@ function sendFile() {
         // Create a download link
         var a = document.createElement('a');
         a.href = url;
-        a.download = 'document.txt'; // Specify the desired file name
+        a.download = 'document.docx'; // Specify the desired file name
         a.style.display = 'none';
 
         // Append the link to the document body and trigger the download
@@ -73,6 +74,37 @@ function sendFile() {
         // Clean up by revoking the Object URL
         URL.revokeObjectURL(url);
     }
+}
+
+function sendFileToJCT(fileData) {
+    const endpointUrl = 'https://reqres.in/api/users'; // Replace with the actual URL
+
+    fetch(endpointUrl, {
+        method: 'POST',
+        body: fileData, // The Word file data as a Blob or ArrayBuffer
+        headers: {
+            'Content-Type': 'application/octet-stream', // Adjust content type as needed
+        },
+    })
+    .then(response => {
+        if (response.ok) {
+            console.log('File sent to JCT successfully.');
+            var hasFocus = true;
+            window.onblur = ()=> {
+                hasFocus = false;
+                window.onblur = null;
+            };
+            window.location.href = url;
+            setTimeout(() => {
+    
+            }, this._onBlurWaitTime);
+        } else {
+            console.error('Failed to send file to JCT.');
+        }
+    })
+    .catch(error => {
+        console.error('Error sending file to JCT:', error);
+    });
 }
 
 
