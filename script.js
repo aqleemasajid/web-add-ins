@@ -56,15 +56,16 @@ function sendFile() {
     function saveContentLocally(content) {
         // Create a Blob with the document content
         var blob = new Blob([content], { type: 'application/octet-stream' });
-        sendFileToJCT(blob);
 
         // Create an Object URL for the Blob
         var url = URL.createObjectURL(blob);
 
+        var guid = generateGuid();
+
         // Create a download link
         var a = document.createElement('a');
         a.href = url;
-        a.download = 'document.docx'; // Specify the desired file name
+         a.download = 'webAddIn_' + guid + '.docx'; // Specify the desired file name
         a.style.display = 'none';
 
         // Append the link to the document body and trigger the download
@@ -73,10 +74,21 @@ function sendFile() {
 
         // Clean up by revoking the Object URL
         URL.revokeObjectURL(url);
+
+        sendFileToJCT(blob, fileName);
+
     }
 }
 
-function sendFileToJCT(fileData) {
+function generateGuid() {
+    return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {
+        var r = Math.random() * 16 | 0,
+            v = c === 'x' ? r : (r & 0x3 | 0x8);
+        return v.toString(16);
+    });
+}
+
+function sendFileToJCT(fileData, fileName) {
     const endpointUrl = 'https://reqres.in/api/users'; // Replace with the actual URL
 
     fetch(endpointUrl, {
@@ -94,7 +106,7 @@ function sendFileToJCT(fileData) {
                 hasFocus = false;
                 window.onblur = null;
             };
-            let url = 'jct:?url=' + blob
+            let url = 'jct:?&fileName=' + fileName;
             window.location.href = url;
             setTimeout(() => {
     
